@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 
-import { loginApi } from "../services/api";
+import { loginAdminApi } from "../services/api";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -27,22 +27,34 @@ export default function Login() {
       setLoading(true);
 
       // LOGIN API
-      const data = await loginApi(email, password);
+      const response = await loginAdminApi(email, password);
+
+      console.log(response);
+
+      // VALIDASI RESPONSE
+      if (!response.success) {
+        alert(response.message);
+
+        return;
+      }
 
       // SAVE TOKEN
-      localStorage.setItem("token", data.token);
+      localStorage.setItem("token", response.token);
 
       // SAVE USER
-      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("user", JSON.stringify(response.user));
 
       alert("Login berhasil");
 
       // REDIRECT
       navigate("/dashboard");
-    } catch (error) {
+    } catch (error: unknown) {
       console.log(error);
 
-      alert("Login gagal");
+      alert(
+        (error as { response?: { data?: { message?: string } } })?.response
+          ?.data?.message || "Login gagal",
+      );
     } finally {
       setLoading(false);
     }
@@ -116,7 +128,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#6f4e37] hover:bg-[#5b3d2a] transition-all duration-300 text-white font-semibold p-4 rounded-2xl shadow-lg"
+            className="w-full bg-[#6f4e37] hover:bg-[#5b3d2a] transition-all duration-300 text-white font-semibold p-4 rounded-2xl shadow-lg disabled:opacity-50"
           >
             {loading ? "Loading..." : "Masuk"}
           </button>

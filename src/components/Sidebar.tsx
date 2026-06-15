@@ -52,8 +52,8 @@ export default function Sidebar() {
           </li>
 
           <li>
-            <Link to="/video" className={menuClass("/video")}>
-              Video
+            <Link to="/tutorial-video" className={menuClass("/tutorial-video")}>
+              Video Tutorial
             </Link>
           </li>
 
@@ -64,8 +64,8 @@ export default function Sidebar() {
           </li>
 
           <li>
-            <Link to="/sertifikat" className={menuClass("/sertifikat")}>
-              Sertifikat
+            <Link to="/pesanan" className={menuClass("/pesanan")}>
+              Pesanan
             </Link>
           </li>
         </ul>
