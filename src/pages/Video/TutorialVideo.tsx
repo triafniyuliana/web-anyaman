@@ -184,7 +184,7 @@ export default function TutorialVideo() {
 
                 <tbody>
                   {filteredVideos.length >
-                  0 ? (
+                    0 ? (
                     filteredVideos.map(
                       (
                         item,
@@ -216,15 +216,16 @@ export default function TutorialVideo() {
                             }
                           </td>
 
-                          <td className="px-8 py-5 text-blue-500">
-                            <a
-                              href={
-                                item.videoUrl
-                              }
-                              target="_blank"
+                          <td className="px-8 py-5">
+                            <video
+                              controls
+                              className="w-52 rounded-xl"
                             >
-                              Lihat Video
-                            </a>
+                              <source
+                                src={imageUrl(item.videoUrl)}
+                                type="video/mp4"
+                              />
+                            </video>
                           </td>
 
                           <td className="px-8 py-5">

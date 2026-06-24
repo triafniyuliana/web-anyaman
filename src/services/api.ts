@@ -16,8 +16,8 @@ api.interceptors.request.use((config) => {
 });
 
 // IMAGE URL
-export const imageUrl = (photo: string) => {
-  return `http://localhost:3000/uploads/${photo}`;
+export const imageUrl = (path: string) => {
+  return `http://localhost:3000${path}`;
 };
 
 // LOGIN ADMIN

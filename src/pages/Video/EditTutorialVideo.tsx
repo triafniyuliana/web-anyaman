@@ -16,105 +16,161 @@ export default function EditTutorialVideo() {
 
   const { id } = useParams();
 
-  const [thumbnail, setThumbnail] = useState<File | null>(null);
+  const [thumbnail, setThumbnail] =
+    useState<File | null>(null);
 
-  const [preview, setPreview] = useState("");
+  const [video, setVideo] =
+    useState<File | null>(null);
+
+  const [preview, setPreview] =
+    useState("");
 
   const [form, setForm] = useState({
     title: "",
-    videoUrl: "",
   });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         if (id) {
-          const response = await getDetailTutorialVideoApi(id);
+          const response =
+            await getDetailTutorialVideoApi(
+              id,
+            );
 
-          const data = response.data;
+          const data =
+            response.data;
 
           setForm({
-            title: data.title || "",
-
-            videoUrl: data.videoUrl || "",
+            title:
+              data.title || "",
           });
 
-          if (data.thumbnail) {
-            setPreview(imageUrl(data.thumbnail));
+          if (
+            data.thumbnail
+          ) {
+            setPreview(
+              imageUrl(
+                data.thumbnail,
+              ),
+            );
           }
         }
       } catch (error) {
         console.log(error);
 
-        alert("Gagal mengambil detail video");
+        alert(
+          "Gagal mengambil detail video",
+        );
       }
     };
 
     fetchData();
   }, [id]);
 
-  // HANDLE CHANGE
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setForm({
       ...form,
 
-      [e.target.name]: e.target.value,
+      [e.target.name]:
+        e.target.value,
     });
   };
 
-  // HANDLE THUMBNAIL
-  const handleThumbnail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+  const handleThumbnail = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file =
+      e.target.files?.[0];
 
     if (file) {
       setThumbnail(file);
 
-      setPreview(URL.createObjectURL(file));
+      setPreview(
+        URL.createObjectURL(
+          file,
+        ),
+      );
     }
   };
 
-  // UPDATE VIDEO
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleVideo = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file =
+      e.target.files?.[0];
+
+    if (file) {
+      setVideo(file);
+    }
+  };
+
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>,
+  ) => {
     e.preventDefault();
 
     try {
-      const formData = new FormData();
+      const formData =
+        new FormData();
 
-      formData.append("title", form.title);
-
-      formData.append("videoUrl", form.videoUrl);
+      formData.append(
+        "title",
+        form.title,
+      );
 
       if (thumbnail) {
-        formData.append("thumbnail", thumbnail);
+        formData.append(
+          "thumbnail",
+          thumbnail,
+        );
       }
 
-      await updateTutorialVideoApi(id as string, formData);
+      if (video) {
+        formData.append(
+          "video",
+          video,
+        );
+      }
 
-      alert("Video berhasil diupdate");
+      await updateTutorialVideoApi(
+        id as string,
+        formData,
+      );
 
-      navigate("/tutorial-video");
+      alert(
+        "Video berhasil diupdate",
+      );
+
+      navigate(
+        "/tutorial-video",
+      );
     } catch (error) {
       console.log(error);
 
-      alert("Gagal update video");
+      alert(
+        "Gagal update video",
+      );
     }
   };
 
   return (
     <div className="flex min-h-screen bg-[#f5f1eb]">
-      {/* SIDEBAR */}
       <Sidebar />
 
-      {/* CONTENT */}
       <div className="flex-1">
-        {/* NAVBAR */}
         <Navbar title="Edit Tutorial Video" />
 
-        {/* PAGE */}
         <div className="p-8">
           <div className="bg-white rounded-3xl shadow-sm p-10 max-w-5xl mx-auto">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* THUMBNAIL */}
+            <form
+              onSubmit={
+                handleSubmit
+              }
+              className="space-y-6"
+            >
               <div>
                 <label className="block text-lg font-semibold text-[#5b3a29] mb-3">
                   Thumbnail
@@ -123,7 +179,9 @@ export default function EditTutorialVideo() {
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={handleThumbnail}
+                  onChange={
+                    handleThumbnail
+                  }
                   className="w-full border border-gray-200 rounded-2xl px-5 py-4"
                 />
 
@@ -136,7 +194,6 @@ export default function EditTutorialVideo() {
                 )}
               </div>
 
-              {/* TITLE */}
               <div>
                 <label className="block text-lg font-semibold text-[#5b3a29] mb-3">
                   Judul Video
@@ -145,30 +202,38 @@ export default function EditTutorialVideo() {
                 <input
                   type="text"
                   name="title"
-                  value={form.title}
-                  onChange={handleChange}
+                  value={
+                    form.title
+                  }
+                  onChange={
+                    handleChange
+                  }
                   placeholder="Masukkan judul video"
                   className="w-full border border-gray-200 rounded-2xl px-5 py-4 outline-none focus:border-[#9b6b43]"
                 />
               </div>
 
-              {/* VIDEO URL */}
               <div>
                 <label className="block text-lg font-semibold text-[#5b3a29] mb-3">
-                  URL Video
+                  Ganti Video
                 </label>
 
                 <input
-                  type="text"
-                  name="videoUrl"
-                  value={form.videoUrl}
-                  onChange={handleChange}
-                  placeholder="Masukkan link video"
-                  className="w-full border border-gray-200 rounded-2xl px-5 py-4 outline-none focus:border-[#9b6b43]"
+                  type="file"
+                  accept="video/mp4,video/*"
+                  onChange={
+                    handleVideo
+                  }
+                  className="w-full border border-gray-200 rounded-2xl px-5 py-4"
                 />
+
+                {video && (
+                  <p className="mt-2 text-sm text-gray-500">
+                    {video.name}
+                  </p>
+                )}
               </div>
 
-              {/* BUTTON */}
               <button
                 type="submit"
                 className="bg-[#9b6b43] hover:bg-[#7a5434] text-white px-8 py-4 rounded-2xl text-lg font-semibold transition-all"
