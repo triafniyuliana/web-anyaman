@@ -186,4 +186,30 @@ export const kirimPesananApi = async (
   return response.data;
 };
 
+// UPDATE STATUS PESANAN
+export const updateStatusPesananApi = async (
+  pesananId: string,
+  statusPesanan: string
+) => {
+  const response = await api.put(
+    `/admin/pesanan/${pesananId}/status`,
+    {
+      statusPesanan,
+    }
+  );
+
+  return response.data;
+};
+
+// ── DASHBOARD ─────────────────────────────────────────────────────
+export const getDashboardSummaryApi = async () => {
+  const response = await api.get("/admin/dashboard/summary");
+  return response.data;
+};
+
+export const getBigdataSummaryApi = async () => {
+  const response = await api.get("/admin/dashboard/bigdata");
+  return response.data;
+};
+
 export default api;
