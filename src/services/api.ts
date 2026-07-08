@@ -212,4 +212,10 @@ export const getBigdataSummaryApi = async () => {
   return response.data;
 };
 
+export const getTopViewedProdukApi = async () => {
+  const response = await api.get("/admin/produk/top-viewed");
+
+  return response.data;
+};
+
 export default api;

@@ -19,8 +19,11 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts";
-import { getDashboardSummaryApi, getBigdataSummaryApi } from "../services/api";
-
+import {
+  getDashboardSummaryApi,
+  getBigdataSummaryApi,
+  getTopViewedProdukApi,
+} from "../services/api";
 interface Top3Item {
   ranking: number;
   keyword: string;
@@ -33,6 +36,12 @@ interface TrendsItem {
   jumlahDicari: number;
   rataMinat: number;
   maxMinat: number;
+}
+
+interface TopViewedProduk {
+  id: string;
+  namaProduk: string;
+  viewCount: number;
 }
 
 interface SummaryData {
@@ -54,18 +63,21 @@ const RANKING_LABEL = ["🥇", "🥈", "🥉"];
 export default function Dashboard() {
   const [summary, setSummary] = useState<SummaryData | null>(null);
   const [bigdata, setBigdata] = useState<BigdataData | null>(null);
+  const [topViewedProduk, setTopViewedProduk] = useState<TopViewedProduk[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchAll = async () => {
       try {
-        const [s, b] = await Promise.all([
+        const [s, b, t] = await Promise.all([
           getDashboardSummaryApi(),
           getBigdataSummaryApi(),
+          getTopViewedProdukApi(),
         ]);
 
         setSummary(s.data);
         setBigdata(b.data);
+        setTopViewedProduk(t.data);
       } catch (err) {
         console.error(err);
       } finally {
@@ -246,6 +258,60 @@ export default function Dashboard() {
               </ResponsiveContainer>
             </div>
           </div>
+          <div className="mt-8 bg-white rounded-2xl shadow-md p-6">
+  <div className="flex items-center gap-2 mb-6">
+    <Package size={22} className="text-[#5b3a29]" />
+    <h2 className="text-2xl font-bold text-[#5b3a29]">
+      Produk Paling Banyak Dilihat
+    </h2>
+  </div>
+
+  <ResponsiveContainer width="100%" height={350}>
+    <BarChart
+      layout="vertical"
+      data={topViewedProduk}
+      margin={{ top: 5, right: 20, left: 40, bottom: 5 }}
+    >
+      <CartesianGrid
+        strokeDasharray="3 3"
+        stroke="#f0f0f0"
+        horizontal={false}
+      />
+
+      <XAxis
+        type="number"
+        tick={{ fontSize: 11, fill: "#888" }}
+      />
+
+      <YAxis
+        type="category"
+        dataKey="namaProduk"
+        tick={{ fontSize: 11, fill: "#5b3a29" }}
+        width={120}
+      />
+
+      <Tooltip
+        formatter={(value) => [`${value}x`, "Jumlah Dilihat"]}
+      />
+
+      <Bar
+        dataKey="viewCount"
+        radius={[0, 6, 6, 0]}
+      >
+        {topViewedProduk.map((_, index) => (
+          <Cell
+            key={index}
+            fill={
+              index < 3
+                ? RANKING_COLOR[index % 3]
+                : "#8884d8"
+            }
+          />
+        ))}
+      </Bar>
+    </BarChart>
+  </ResponsiveContainer>
+</div>
         </div>
       </div>
     </div>
