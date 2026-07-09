@@ -1,7 +1,12 @@
 import axios from "axios";
 
+const NGROK_URL = "https://armory-undertone-pamperer.ngrok-free.dev";
+
 const api = axios.create({
-  baseURL: "http://localhost:3000/api",
+  baseURL: `${NGROK_URL}/api`,
+  headers: {
+    "ngrok-skip-browser-warning": "69420",
+  }
 });
 
 // AUTO TOKEN
@@ -17,7 +22,7 @@ api.interceptors.request.use((config) => {
 
 // IMAGE URL
 export const imageUrl = (path: string) => {
-  return `http://localhost:3000${path}`;
+  return `${NGROK_URL}${path}`;
 };
 
 // LOGIN ADMIN
@@ -108,80 +113,51 @@ export const deleteTutorialVideoApi = async (id: string) => {
 
 // GET PRODUK
 export const getProdukApi = async () => {
-  const response = await api.get(
-    "/admin/produk"
-  );
+  const response = await api.get("/admin/produk");
 
   return response.data;
 };
 
 // GET DETAIL PRODUK
-export const getDetailProdukApi = async (
-  id: string
-) => {
-  const response = await api.get(
-    `/admin/produk/${id}`
-  );
+export const getDetailProdukApi = async (id: string) => {
+  const response = await api.get(`/admin/produk/${id}`);
 
   return response.data;
 };
 
 // CREATE PRODUK
-export const createProdukApi = async (
-  data: FormData | object
-) => {
-  const response = await api.post(
-    "/admin/create-produk",
-    data
-  );
+export const createProdukApi = async (data: FormData | object) => {
+  const response = await api.post("/admin/create-produk", data);
 
   return response.data;
 };
 
 // UPDATE PRODUK
-export const updateProdukApi = async (
-  id: string,
-  data: FormData | object
-) => {
-  const response = await api.put(
-    `/admin/update-produk/${id}`,
-    data
-  );
+export const updateProdukApi = async (id: string, data: FormData | object) => {
+  const response = await api.put(`/admin/update-produk/${id}`, data);
 
   return response.data;
 };
 
 // DELETE PRODUK
-export const deleteProdukApi = async (
-  id: string
-) => {
-  const response = await api.delete(
-    `/admin/delete-produk/${id}`
-  );
+export const deleteProdukApi = async (id: string) => {
+  const response = await api.delete(`/admin/delete-produk/${id}`);
 
   return response.data;
 };
 
 // GET PESANAN
 export const getPesananApi = async () => {
-  const response = await api.get(
-    "/admin/pesanan"
-  );
+  const response = await api.get("/admin/pesanan");
 
   return response.data;
 };
 
 // KIRIM PESANAN
-export const kirimPesananApi = async (
-  pesananId: string,
-  nomorResi: string
-) => {
-  const response = await api.put(
-    `/admin/pesanan/${pesananId}/kirim`,
-    {
-      nomorResi,
-    }
-  );
+export const kirimPesananApi = async (pesananId: string, nomorResi: string) => {
+  const response = await api.put(`/admin/pesanan/${pesananId}/kirim`, {
+    nomorResi,
+  });
 
   return response.data;
 };
@@ -191,12 +167,9 @@ export const updateStatusPesananApi = async (
   pesananId: string,
   statusPesanan: string
 ) => {
-  const response = await api.put(
-    `/admin/pesanan/${pesananId}/status`,
-    {
-      statusPesanan,
-    }
-  );
+  const response = await api.put(`/admin/pesanan/${pesananId}/status`, {
+    statusPesanan,
+  });
 
   return response.data;
 };
@@ -214,7 +187,6 @@ export const getBigdataSummaryApi = async () => {
 
 export const getTopViewedProdukApi = async () => {
   const response = await api.get("/admin/produk/top-viewed");
-
   return response.data;
 };
 
