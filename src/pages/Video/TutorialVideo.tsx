@@ -1,19 +1,15 @@
 import { Link } from "react-router-dom";
-
 import {
   useEffect,
   useState,
 } from "react";
-
 import {
   Search,
   Pencil,
   Trash2,
 } from "lucide-react";
-
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
-
 import {
   deleteTutorialVideoApi,
   getTutorialVideoApi,
@@ -22,13 +18,9 @@ import {
 
 type TutorialVideoType = {
   id: string;
-
   title: string;
-
   videoUrl: string;
-
   thumbnail: string;
-
   createdAt: string;
 };
 
@@ -37,7 +29,6 @@ export default function TutorialVideo() {
     useState<
       TutorialVideoType[]
     >([]);
-
   const [search, setSearch] =
     useState("");
 
@@ -47,7 +38,6 @@ export default function TutorialVideo() {
       try {
         const response =
           await getTutorialVideoApi();
-
         setVideos(
           response.data,
         );
@@ -61,7 +51,6 @@ export default function TutorialVideo() {
       async () => {
         await getVideos();
       };
-
     fetchData();
   }, []);
 
@@ -74,7 +63,6 @@ export default function TutorialVideo() {
         window.confirm(
           "Yakin ingin menghapus video?",
         );
-
       if (!confirmDelete)
         return;
 
@@ -82,15 +70,12 @@ export default function TutorialVideo() {
         await deleteTutorialVideoApi(
           id,
         );
-
         alert(
           "Video berhasil dihapus",
         );
-
         getVideos();
       } catch (error) {
         console.log(error);
-
         alert(
           "Gagal menghapus video",
         );
@@ -127,7 +112,6 @@ export default function TutorialVideo() {
                   size={22}
                   className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400"
                 />
-
                 <input
                   type="text"
                   placeholder="Cari video..."
@@ -159,29 +143,23 @@ export default function TutorialVideo() {
                     <th className="px-8 py-6 text-left text-lg font-bold text-[#5b3a29]">
                       No
                     </th>
-
                     <th className="px-8 py-6 text-left text-lg font-bold text-[#5b3a29]">
                       Thumbnail
                     </th>
-
                     <th className="px-8 py-6 text-left text-lg font-bold text-[#5b3a29]">
                       Judul
                     </th>
-
                     <th className="px-8 py-6 text-left text-lg font-bold text-[#5b3a29]">
                       Video URL
                     </th>
-
                     <th className="px-8 py-6 text-left text-lg font-bold text-[#5b3a29]">
                       Tanggal
                     </th>
-
                     <th className="px-8 py-6 text-center text-lg font-bold text-[#5b3a29]">
                       Aksi
                     </th>
                   </tr>
                 </thead>
-
                 <tbody>
                   {filteredVideos.length >
                     0 ? (
@@ -197,37 +175,31 @@ export default function TutorialVideo() {
                           <td className="px-8 py-5">
                             {index + 1}
                           </td>
-
                           <td className="px-8 py-5">
                             <img
-                              src={imageUrl(
-                                item.thumbnail,
-                              )}
+                              src={item.thumbnail.startsWith("http") ? item.thumbnail : imageUrl(item.thumbnail)}
                               alt={
                                 item.title
                               }
                               className="w-28 h-20 rounded-xl object-cover"
                             />
                           </td>
-
                           <td className="px-8 py-5 font-semibold text-[#5b3a29]">
                             {
                               item.title
                             }
                           </td>
-
                           <td className="px-8 py-5">
                             <video
                               controls
                               className="w-52 rounded-xl"
                             >
                               <source
-                                src={imageUrl(item.videoUrl)}
+                                src={item.videoUrl.startsWith("http") ? item.videoUrl : imageUrl(item.videoUrl)}
                                 type="video/mp4"
                               />
                             </video>
                           </td>
-
                           <td className="px-8 py-5">
                             {new Date(
                               item.createdAt,
@@ -242,7 +214,6 @@ export default function TutorialVideo() {
                               },
                             )}
                           </td>
-
                           <td className="px-8 py-5">
                             <div className="flex items-center justify-center gap-3">
                               {/* EDIT */}

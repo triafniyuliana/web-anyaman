@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
-
 import { Search } from "lucide-react";
-
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
-
 import { getUsersProfileApi } from "../services/api";
 
 type User = {
@@ -22,7 +19,6 @@ export default function Pengguna() {
   const getUsers = async () => {
     try {
       const response = await getUsersProfileApi();
-
       setUsers(response.data);
     } catch (error) {
       console.log(error);
@@ -33,7 +29,6 @@ export default function Pengguna() {
     const fetchData = async () => {
       await getUsers();
     };
-
     fetchData();
   }, []);
 
@@ -60,7 +55,6 @@ export default function Pengguna() {
                 size={22}
                 className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400"
               />
-
               <input
                 type="text"
                 placeholder="Cari pengguna..."
@@ -80,25 +74,20 @@ export default function Pengguna() {
                     <th className="px-8 py-6 text-left text-lg font-bold text-[#5b3a29]">
                       No
                     </th>
-
                     <th className="px-8 py-6 text-left text-lg font-bold text-[#5b3a29]">
                       Foto
                     </th>
-
                     <th className="px-8 py-6 text-left text-lg font-bold text-[#5b3a29]">
                       Nama
                     </th>
-
                     <th className="px-8 py-6 text-left text-lg font-bold text-[#5b3a29]">
                       Email
                     </th>
-
                     <th className="px-8 py-6 text-left text-lg font-bold text-[#5b3a29]">
                       Tanggal Bergabung
                     </th>
                   </tr>
                 </thead>
-
                 <tbody>
                   {filteredUsers.length > 0 ? (
                     filteredUsers.map((user, index) => (
@@ -109,12 +98,13 @@ export default function Pengguna() {
                         <td className="px-8 py-5 text-gray-700 text-lg">
                           {index + 1}
                         </td>
-
                         <td className="px-8 py-5">
                           <img
                             src={
                               user.photo
-                                ? `http://localhost:3000${user.photo}`
+                                ? user.photo.startsWith("http")
+                                  ? user.photo
+                                  : `https://anyam.onrender.com${user.photo.startsWith("/") ? "" : "/"}${user.photo}`
                                 : "https://cdn-icons-png.flaticon.com/512/149/149071.png"
                             }
                             alt={user.name}
@@ -125,17 +115,14 @@ export default function Pengguna() {
                             }}
                           />
                         </td>
-
                         <td className="px-8 py-5">
                           <p className="text-lg font-semibold text-[#5b3a29]">
                             {user.name}
                           </p>
                         </td>
-
                         <td className="px-8 py-5 text-gray-600 text-lg">
                           {user.email}
                         </td>
-
                         <td className="px-8 py-5 text-gray-600 text-lg">
                           {new Date(user.createdAt).toLocaleDateString(
                             "id-ID",

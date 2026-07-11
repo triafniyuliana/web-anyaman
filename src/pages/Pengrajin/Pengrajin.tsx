@@ -109,7 +109,6 @@ export default function Pengrajin() {
                                     <col style={{ width: "145px" }} />
                                     <col style={{ width: "100px" }} />
                                 </colgroup>
-
                                 <thead className="bg-[#f8f5f1]">
                                     <tr>
                                         {[
@@ -133,7 +132,6 @@ export default function Pengrajin() {
                                         ))}
                                     </tr>
                                 </thead>
-
                                 <tbody>
                                     {filteredPengrajin.length > 0 ? (
                                         filteredPengrajin.map((item, index) => (
@@ -144,45 +142,39 @@ export default function Pengrajin() {
                                                 <td className="px-4 py-5 text-base text-gray-500">
                                                     {index + 1}
                                                 </td>
-
                                                 <td className="px-4 py-5">
                                                     <img
                                                         src={
                                                             item.photo
-                                                                ? `http://localhost:3000/uploads/${item.photo}`
+                                                                ? item.photo.startsWith("http")
+                                                                    ? item.photo
+                                                                    : `https://anyam.onrender.com/uploads/${item.photo.replace("/uploads/", "")}`
                                                                 : "https://cdn-icons-png.flaticon.com/512/149/149071.png"
                                                         }
                                                         alt={item.name}
                                                         className="w-14 h-14 rounded-xl object-cover border border-[#e7d8c9]"
                                                     />
                                                 </td>
-
                                                 <td className="px-4 py-5 font-semibold text-base text-[#5b3a29] truncate">
                                                     {item.name}
                                                 </td>
-
                                                 <td className="px-4 py-5 text-base text-gray-600 truncate">
                                                     {item.email}
                                                 </td>
-
                                                 <td className="px-4 py-5 text-base text-gray-600">
                                                     {item.phone || "-"}
                                                 </td>
-
                                                 <td className="px-4 py-5 text-base text-gray-600 truncate">
                                                     {item.address || "-"}
                                                 </td>
-
                                                 <td className="px-4 py-5 text-base text-gray-600">
                                                     {item.experience || "-"}
                                                 </td>
-
                                                 <td className="px-4 py-5 text-base text-gray-600">
                                                     <p className="line-clamp-2">
                                                         {item.description || "-"}
                                                     </p>
                                                 </td>
-
                                                 <td className="px-4 py-5 text-base text-gray-600">
                                                     {new Date(item.createdAt).toLocaleDateString("id-ID", {
                                                         day: "2-digit",
@@ -190,7 +182,6 @@ export default function Pengrajin() {
                                                         year: "numeric",
                                                     })}
                                                 </td>
-
                                                 <td className="px-4 py-5">
                                                     <div className="flex items-center justify-center gap-2">
                                                         <Link
@@ -199,7 +190,6 @@ export default function Pengrajin() {
                                                         >
                                                             <Pencil size={18} />
                                                         </Link>
-
                                                         <button
                                                             onClick={() => handleDelete(item.id)}
                                                             className="bg-red-500 hover:bg-red-600 text-white p-2.5 rounded-xl transition-all"

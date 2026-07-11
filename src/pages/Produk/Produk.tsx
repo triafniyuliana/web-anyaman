@@ -1,14 +1,9 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Search, Pencil, Trash2 } from "lucide-react";
-
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
-
-import {
-    getProdukApi,
-    deleteProdukApi,
-} from "../../services/api";
+import { getProdukApi, deleteProdukApi } from "../../services/api";
 
 type ProdukType = {
     id: string;
@@ -46,7 +41,6 @@ export default function Produk() {
                 console.log(error);
             }
         };
-
         fetchProduk();
     }, []);
 
@@ -84,7 +78,6 @@ export default function Produk() {
                                     size={22}
                                     className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400"
                                 />
-
                                 <input
                                     type="text"
                                     placeholder="Cari produk / keyword trend..."
@@ -120,18 +113,18 @@ export default function Produk() {
                                         <th className="px-6 py-5 text-center">Aksi</th>
                                     </tr>
                                 </thead>
-
                                 <tbody>
                                     {filteredProduk.length > 0 ? (
                                         filteredProduk.map((item, index) => (
                                             <tr key={item.id} className="border-t border-gray-100">
                                                 <td className="px-6 py-5">{index + 1}</td>
-
                                                 <td className="px-6 py-5">
                                                     <img
                                                         src={
                                                             item.foto
-                                                                ? `http://localhost:3000/uploads/${item.foto}`
+                                                                ? item.foto.startsWith("http")
+                                                                    ? item.foto
+                                                                    : `https://anyam.onrender.com/uploads/${item.foto.replace("/uploads/", "")}`
                                                                 : "https://placehold.co/80x80?text=No+Image"
                                                         }
                                                         alt={item.namaProduk}
@@ -142,27 +135,21 @@ export default function Produk() {
                                                         }}
                                                     />
                                                 </td>
-
                                                 <td className="px-6 py-5 font-semibold text-[#5b3a29]">
                                                     {item.namaProduk}
                                                 </td>
-
                                                 <td className="px-6 py-5">
                                                     <span className="bg-[#f5f1eb] text-[#5b3a29] px-3 py-2 rounded-xl text-sm font-semibold">
                                                         {item.keywordTrend || "-"}
                                                     </span>
                                                 </td>
-
                                                 <td className="px-6 py-5">{item.kategori}</td>
-
                                                 <td className="px-6 py-5">
                                                     Rp {item.harga.toLocaleString("id-ID")}
                                                 </td>
-
                                                 <td className="px-6 py-5">{item.stok}</td>
                                                 <td className="px-6 py-5">{item.ukuran}</td>
                                                 <td className="px-6 py-5">{item.bahan}</td>
-
                                                 <td className="px-6 py-5">
                                                     <div className="flex justify-center gap-3">
                                                         <Link
@@ -171,7 +158,6 @@ export default function Produk() {
                                                         >
                                                             <Pencil size={20} />
                                                         </Link>
-
                                                         <button
                                                             onClick={() => handleDelete(item.id)}
                                                             className="bg-red-500 hover:bg-red-600 text-white p-3 rounded-xl"

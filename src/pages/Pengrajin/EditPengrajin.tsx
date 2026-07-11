@@ -1,21 +1,15 @@
 import { useEffect, useState, useCallback } from "react";
-
 import { useNavigate, useParams } from "react-router-dom";
-
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
-
 import api, { imageUrl, updatePengrajinApi } from "../../services/api";
 
 export default function EditPengrajin() {
   const navigate = useNavigate();
-
   const { id } = useParams();
 
   const [photo, setPhoto] = useState<File | null>(null);
-
   const [preview, setPreview] = useState("");
-
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -29,30 +23,22 @@ export default function EditPengrajin() {
   const getDetailPengrajin = useCallback(async () => {
     try {
       const response = await api.get(`/admin/pengrajin/${id}`);
-
       const data = response.data.data;
-
       setForm({
         name: data.name || "",
-
         email: data.email || "",
-
         phone: data.phone || "",
-
         address: data.address || "",
-
         experience: data.experience || "",
-
         description: data.description || "",
       });
 
       // PREVIEW FOTO
       if (data.photo) {
-        setPreview(imageUrl(data.photo));
+        setPreview(data.photo.startsWith("http") ? data.photo : imageUrl(data.photo));
       }
     } catch (error) {
       console.log(error);
-
       alert("Gagal mengambil detail pengrajin");
     }
   }, [id]);
@@ -63,7 +49,6 @@ export default function EditPengrajin() {
         await getDetailPengrajin();
       }
     };
-
     fetchData();
   }, [id, getDetailPengrajin]);
 
@@ -73,7 +58,6 @@ export default function EditPengrajin() {
   ) => {
     setForm({
       ...form,
-
       [e.target.name]: e.target.value,
     });
   };
@@ -81,30 +65,21 @@ export default function EditPengrajin() {
   // HANDLE PHOTO
   const handlePhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-
     if (file) {
       setPhoto(file);
-
       setPreview(URL.createObjectURL(file));
     }
   };
 
   const handleSubmit = async (e: unknown) => {
     (e as React.FormEvent<HTMLFormElement>).preventDefault();
-
     try {
       const formData = new FormData();
-
       formData.append("name", form.name);
-
       formData.append("email", form.email);
-
       formData.append("phone", form.phone);
-
       formData.append("address", form.address);
-
       formData.append("experience", form.experience);
-
       formData.append("description", form.description);
 
       if (photo) {
@@ -112,16 +87,14 @@ export default function EditPengrajin() {
       }
 
       await updatePengrajinApi(id as string, formData);
-
       alert("Pengrajin berhasil diupdate");
-
       navigate("/pengrajin");
     } catch (error) {
       console.log(error);
-
       alert("Gagal update pengrajin");
     }
   };
+
   return (
     <div className="flex min-h-screen bg-[#f5f1eb]">
       {/* SIDEBAR */}
@@ -142,14 +115,12 @@ export default function EditPengrajin() {
                 <label className="block text-lg font-semibold text-[#5b3a29] mb-3">
                   Foto Pengrajin
                 </label>
-
                 <input
                   type="file"
                   accept="image/*"
                   onChange={handlePhoto}
                   className="w-full border border-gray-200 rounded-2xl px-5 py-4"
                 />
-
                 {preview && (
                   <img
                     src={preview}
@@ -164,7 +135,6 @@ export default function EditPengrajin() {
                 <label className="block text-lg font-semibold text-[#5b3a29] mb-3">
                   Nama
                 </label>
-
                 <input
                   type="text"
                   name="name"
@@ -180,7 +150,6 @@ export default function EditPengrajin() {
                 <label className="block text-lg font-semibold text-[#5b3a29] mb-3">
                   Email
                 </label>
-
                 <input
                   type="email"
                   name="email"
@@ -196,7 +165,6 @@ export default function EditPengrajin() {
                 <label className="block text-lg font-semibold text-[#5b3a29] mb-3">
                   No Telepon
                 </label>
-
                 <input
                   type="text"
                   name="phone"
@@ -212,7 +180,6 @@ export default function EditPengrajin() {
                 <label className="block text-lg font-semibold text-[#5b3a29] mb-3">
                   Alamat
                 </label>
-
                 <input
                   type="text"
                   name="address"
@@ -228,7 +195,6 @@ export default function EditPengrajin() {
                 <label className="block text-lg font-semibold text-[#5b3a29] mb-3">
                   Pengalaman
                 </label>
-
                 <input
                   type="text"
                   name="experience"
@@ -244,7 +210,6 @@ export default function EditPengrajin() {
                 <label className="block text-lg font-semibold text-[#5b3a29] mb-3">
                   Deskripsi
                 </label>
-
                 <textarea
                   name="description"
                   value={form.description}

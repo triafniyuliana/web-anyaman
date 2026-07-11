@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
-
 import { useNavigate, useParams } from "react-router-dom";
-
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
-
 import {
   getDetailTutorialVideoApi,
   updateTutorialVideoApi,
@@ -13,18 +10,14 @@ import {
 
 export default function EditTutorialVideo() {
   const navigate = useNavigate();
-
   const { id } = useParams();
 
   const [thumbnail, setThumbnail] =
     useState<File | null>(null);
-
   const [video, setVideo] =
     useState<File | null>(null);
-
   const [preview, setPreview] =
     useState("");
-
   const [form, setForm] = useState({
     title: "",
   });
@@ -37,10 +30,8 @@ export default function EditTutorialVideo() {
             await getDetailTutorialVideoApi(
               id,
             );
-
           const data =
             response.data;
-
           setForm({
             title:
               data.title || "",
@@ -49,22 +40,16 @@ export default function EditTutorialVideo() {
           if (
             data.thumbnail
           ) {
-            setPreview(
-              imageUrl(
-                data.thumbnail,
-              ),
-            );
+            setPreview(data.thumbnail.startsWith("http") ? data.thumbnail : imageUrl(data.thumbnail));
           }
         }
       } catch (error) {
         console.log(error);
-
         alert(
           "Gagal mengambil detail video",
         );
       }
     };
-
     fetchData();
   }, [id]);
 
@@ -73,7 +58,6 @@ export default function EditTutorialVideo() {
   ) => {
     setForm({
       ...form,
-
       [e.target.name]:
         e.target.value,
     });
@@ -84,10 +68,8 @@ export default function EditTutorialVideo() {
   ) => {
     const file =
       e.target.files?.[0];
-
     if (file) {
       setThumbnail(file);
-
       setPreview(
         URL.createObjectURL(
           file,
@@ -101,7 +83,6 @@ export default function EditTutorialVideo() {
   ) => {
     const file =
       e.target.files?.[0];
-
     if (file) {
       setVideo(file);
     }
@@ -111,45 +92,37 @@ export default function EditTutorialVideo() {
     e: React.FormEvent<HTMLFormElement>,
   ) => {
     e.preventDefault();
-
     try {
       const formData =
         new FormData();
-
       formData.append(
         "title",
         form.title,
       );
-
       if (thumbnail) {
         formData.append(
           "thumbnail",
           thumbnail,
         );
       }
-
       if (video) {
         formData.append(
           "video",
           video,
         );
       }
-
       await updateTutorialVideoApi(
         id as string,
         formData,
       );
-
       alert(
         "Video berhasil diupdate",
       );
-
       navigate(
         "/tutorial-video",
       );
     } catch (error) {
       console.log(error);
-
       alert(
         "Gagal update video",
       );
@@ -159,10 +132,8 @@ export default function EditTutorialVideo() {
   return (
     <div className="flex min-h-screen bg-[#f5f1eb]">
       <Sidebar />
-
       <div className="flex-1">
         <Navbar title="Edit Tutorial Video" />
-
         <div className="p-8">
           <div className="bg-white rounded-3xl shadow-sm p-10 max-w-5xl mx-auto">
             <form
@@ -175,7 +146,6 @@ export default function EditTutorialVideo() {
                 <label className="block text-lg font-semibold text-[#5b3a29] mb-3">
                   Thumbnail
                 </label>
-
                 <input
                   type="file"
                   accept="image/*"
@@ -184,7 +154,6 @@ export default function EditTutorialVideo() {
                   }
                   className="w-full border border-gray-200 rounded-2xl px-5 py-4"
                 />
-
                 {preview && (
                   <img
                     src={preview}
@@ -198,7 +167,6 @@ export default function EditTutorialVideo() {
                 <label className="block text-lg font-semibold text-[#5b3a29] mb-3">
                   Judul Video
                 </label>
-
                 <input
                   type="text"
                   name="title"
@@ -217,7 +185,6 @@ export default function EditTutorialVideo() {
                 <label className="block text-lg font-semibold text-[#5b3a29] mb-3">
                   Ganti Video
                 </label>
-
                 <input
                   type="file"
                   accept="video/mp4,video/*"
@@ -226,7 +193,6 @@ export default function EditTutorialVideo() {
                   }
                   className="w-full border border-gray-200 rounded-2xl px-5 py-4"
                 />
-
                 {video && (
                   <p className="mt-2 text-sm text-gray-500">
                     {video.name}

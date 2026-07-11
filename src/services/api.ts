@@ -1,28 +1,31 @@
-import axios from "axios";
+import axios from 'axios';
 
-const NGROK_URL = "https://armory-undertone-pamperer.ngrok-free.dev";
+// URL Backend Render Anda yang baru
+export const API_URL = 'https://anyam.onrender.com';
 
 const api = axios.create({
-  baseURL: `${NGROK_URL}/api`,
-  headers: {
-    "ngrok-skip-browser-warning": "69420",
-  }
+  baseURL: `${API_URL}/api`, // Sesuaikan dengan prefix routing backend Anda (misal /api)
 });
 
-// AUTO TOKEN
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+// Interceptor untuk menyisipkan Token JWT otomatis ke setiap request
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
-
-  return config;
-});
+);
 
 // IMAGE URL
 export const imageUrl = (path: string) => {
-  return `${NGROK_URL}${path}`;
+  if (!path) return "";
+  if (path.startsWith("http")) return path; // Jika sudah Cloudinary, kembalikan langsung
+  return `${API_URL}${path}`; // Jika masih data lama, gunakan Ngrok
 };
 
 // LOGIN ADMIN

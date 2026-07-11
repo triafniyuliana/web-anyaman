@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
-
 import {
   getDetailProdukApi,
   updateProdukApi,
@@ -16,7 +14,6 @@ export default function EditProduk() {
 
   const [foto, setFoto] = useState<File | null>(null);
   const [preview, setPreview] = useState("");
-
   const [form, setForm] = useState({
     namaProduk: "",
     keywordTrend: "",
@@ -32,10 +29,8 @@ export default function EditProduk() {
     const fetchData = async () => {
       try {
         if (!id) return;
-
         const response = await getDetailProdukApi(id);
         const data = response.data;
-
         setForm({
           namaProduk: data.namaProduk || "",
           keywordTrend: data.keywordTrend || "",
@@ -46,16 +41,14 @@ export default function EditProduk() {
           ukuran: data.ukuran || "",
           bahan: data.bahan || "",
         });
-
         if (data.foto) {
-          setPreview(imageUrl(data.foto));
+          setPreview(data.foto.startsWith("http") ? data.foto : imageUrl(data.foto));
         }
       } catch (error) {
         console.log(error);
         alert("Gagal mengambil detail produk");
       }
     };
-
     fetchData();
   }, [id]);
 
@@ -70,7 +63,6 @@ export default function EditProduk() {
 
   const handleFoto = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-
     if (file) {
       setFoto(file);
       setPreview(URL.createObjectURL(file));
@@ -79,10 +71,8 @@ export default function EditProduk() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     try {
       const formData = new FormData();
-
       formData.append("namaProduk", form.namaProduk);
       formData.append("keywordTrend", form.keywordTrend);
       formData.append("deskripsi", form.deskripsi);
@@ -95,9 +85,7 @@ export default function EditProduk() {
       if (foto) {
         formData.append("foto", foto);
       }
-
       await updateProdukApi(id as string, formData);
-
       alert("Produk berhasil diupdate");
       navigate("/produk");
     } catch (error) {
@@ -109,10 +97,8 @@ export default function EditProduk() {
   return (
     <div className="flex min-h-screen bg-[#f5f1eb]">
       <Sidebar />
-
       <div className="flex-1">
         <Navbar title="Edit Produk" />
-
         <div className="p-8">
           <div className="bg-white rounded-3xl shadow-sm p-10 max-w-5xl mx-auto">
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -120,14 +106,12 @@ export default function EditProduk() {
                 <label className="block text-lg font-semibold text-[#5b3a29] mb-3">
                   Foto Produk
                 </label>
-
                 <input
                   type="file"
                   accept="image/*"
                   onChange={handleFoto}
                   className="w-full border border-gray-200 rounded-2xl px-5 py-4"
                 />
-
                 {preview && (
                   <img
                     src={preview}
@@ -136,7 +120,6 @@ export default function EditProduk() {
                   />
                 )}
               </div>
-
               <input
                 type="text"
                 name="namaProduk"
@@ -145,7 +128,6 @@ export default function EditProduk() {
                 placeholder="Nama Produk"
                 className="w-full border rounded-2xl px-5 py-4"
               />
-
               <input
                 type="text"
                 name="keywordTrend"
@@ -154,7 +136,6 @@ export default function EditProduk() {
                 placeholder="Keyword Google Trends, contoh: caping bambu"
                 className="w-full border rounded-2xl px-5 py-4"
               />
-
               <textarea
                 name="deskripsi"
                 value={form.deskripsi}
@@ -162,7 +143,6 @@ export default function EditProduk() {
                 placeholder="Deskripsi"
                 className="w-full border rounded-2xl px-5 py-4 h-32"
               />
-
               <input
                 type="number"
                 name="harga"
@@ -171,7 +151,6 @@ export default function EditProduk() {
                 placeholder="Harga"
                 className="w-full border rounded-2xl px-5 py-4"
               />
-
               <input
                 type="number"
                 name="stok"
@@ -180,7 +159,6 @@ export default function EditProduk() {
                 placeholder="Stok"
                 className="w-full border rounded-2xl px-5 py-4"
               />
-
               <input
                 type="text"
                 name="kategori"
@@ -189,7 +167,6 @@ export default function EditProduk() {
                 placeholder="Kategori"
                 className="w-full border rounded-2xl px-5 py-4"
               />
-
               <input
                 type="text"
                 name="ukuran"
@@ -198,7 +175,6 @@ export default function EditProduk() {
                 placeholder="Ukuran"
                 className="w-full border rounded-2xl px-5 py-4"
               />
-
               <input
                 type="text"
                 name="bahan"
@@ -207,7 +183,6 @@ export default function EditProduk() {
                 placeholder="Bahan"
                 className="w-full border rounded-2xl px-5 py-4"
               />
-
               <button
                 type="submit"
                 className="bg-[#9b6b43] hover:bg-[#7a5434] text-white px-8 py-4 rounded-2xl text-lg font-semibold"
